@@ -35,7 +35,7 @@ Clone this repository:
     node index.js
 5. Prompt sample
 
-    ![Prompt](./assets/Prompt.png)
+    ![Prompt](./Assets/Prompt.png)
 
 6. If you're still struggling watch the video tutorial [here](https://vimeo.com/950372769?share=copy).
 
