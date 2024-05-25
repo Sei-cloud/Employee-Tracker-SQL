@@ -27,6 +27,7 @@ async function mainMenu() {
                 'Add a Role',
                 'Add an Employee',
                 'Update an Employee Role',
+                'Remove an Employee',
                 'Exit'
             ]
         });
@@ -52,6 +53,9 @@ async function mainMenu() {
                 break;
             case 'Update an Employee Role':
                 await updateEmployeeRole();
+                break;
+            case 'Remove an Employee':
+                await deleteEmployee();
                 break;
             case 'Exit':
                 connection.end();
@@ -188,6 +192,35 @@ async function addEmployee() {
     console.log('Employee added successfully!');
     mainMenu();
 }
+
+// Function to delete an employee
+async function deleteEmployee() {
+    try {
+        // Fetch all employees to display as choices
+        const employees = await connection.query('SELECT id, first_name, last_name FROM employees');
+        const employeeChoices = employees.rows.map(employee => ({
+            name: `${employee.first_name} ${employee.last_name}`,
+            value: employee.id
+        }));
+
+        // Prompt the user to select an employee to delete
+        const employeeAnswer = await inquirer.prompt({
+            type: 'list',
+            name: 'employeeId',
+            message: 'Select the employee you want to delete:',
+            choices: employeeChoices
+        });
+
+        // Delete the selected employee from the database
+        await connection.query('DELETE FROM employees WHERE id = $1', [employeeAnswer.employeeId]);
+        console.log('Employee deleted successfully!');
+        mainMenu();
+    } catch (error) {
+        console.error('Error deleting employee:', error.stack);
+        mainMenu();
+    }
+}
+
 
 // Function to update an employee role
 async function updateEmployeeRole() {
